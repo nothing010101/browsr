@@ -442,7 +442,7 @@
         /* All hero children start hidden */
         .hero-reveal {
             opacity: 0;
-            animation: hero-up 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+            animation: hero-up 0.9s cubic-bezier(0.22,1,0.36,1) both;
         }
         @keyframes hero-up {
             from { opacity: 0; transform: translateY(40px); filter: blur(6px); }
@@ -464,7 +464,7 @@
         .shimmer-word {
             display: inline-block;
             opacity: 0;
-            animation: word-shimmer 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+            animation: word-shimmer 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
         /* gradient-text animated shimmer sweep */
@@ -521,6 +521,17 @@
         @keyframes orb-drift-3 {
             0%,100% { transform: translate(0,0) scale(1); }
             50%     { transform: translate(-50px,-50px) scale(1.2); }
+        }
+
+        /* Safety net: if animations disabled or unsupported, always show content */
+        @media (prefers-reduced-motion: reduce) {
+            .hero-reveal, .shimmer-word, .loader-text-reveal, .loader-subtext {
+                opacity: 1 !important;
+                animation: none !important;
+                filter: none !important;
+                transform: none !important;
+            }
+            nav { animation: none !important; opacity: 1 !important; }
         }
 
         /* Nav slide down on load */
@@ -1444,6 +1455,19 @@
             showNotification();
             setInterval(showNotification, 15000);
         }, 5000);
+
+        // Safety fallback: force all animated elements visible after 3s
+        setTimeout(() => {
+            document.querySelectorAll('.hero-reveal, .shimmer-word').forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+                el.style.filter = 'none';
+            });
+            const navEl = document.querySelector('nav');
+            if (navEl) { navEl.style.opacity = '1'; navEl.style.transform = 'none'; }
+            const ls = document.getElementById('loading-screen');
+            if (ls) ls.style.display = 'none';
+        }, 3000);
     </script>
 </body>
 </html>
