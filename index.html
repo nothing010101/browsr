@@ -363,22 +363,203 @@
             }
         }
         
-        /* Always animate partner logos */
-        .partners-scroll-content {
-            animation: partners-scroll 30s linear infinite !important;
+        /* ============================================
+           OPENING ANIMATION SYSTEM
+        ============================================ */
+
+        /* --- Loading screen rings --- */
+        .loader-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid transparent;
         }
-    </style>
+        .loader-ring-1 {
+            width: 200px; height: 200px;
+            border-color: rgba(168,85,247,0.15);
+            animation: ring-expand 2s ease-out infinite;
+        }
+        .loader-ring-2 {
+            width: 300px; height: 300px;
+            border-color: rgba(168,85,247,0.08);
+            animation: ring-expand 2s ease-out 0.4s infinite;
+        }
+        .loader-ring-3 {
+            width: 420px; height: 420px;
+            border-color: rgba(236,72,153,0.05);
+            animation: ring-expand 2s ease-out 0.8s infinite;
+        }
+        @keyframes ring-expand {
+            0%   { transform: scale(0.7); opacity: 0; }
+            40%  { opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        /* --- Spinner variants --- */
+        .loader-spin-fast {
+            animation: spin-cw 0.8s linear infinite;
+        }
+        .loader-spin-slow {
+            animation: spin-ccw 1.4s linear infinite;
+        }
+        @keyframes spin-cw  { to { transform: rotate(360deg); } }
+        @keyframes spin-ccw { to { transform: rotate(-360deg); } }
+
+        /* --- Center dot pulse --- */
+        .loader-pulse-dot {
+            animation: dot-pulse 1s ease-in-out infinite alternate;
+            box-shadow: 0 0 12px 4px rgba(168,85,247,0.6);
+        }
+        @keyframes dot-pulse {
+            from { transform: scale(0.7); opacity: 0.6; box-shadow: 0 0 6px 2px rgba(168,85,247,0.3); }
+            to   { transform: scale(1.2); opacity: 1;   box-shadow: 0 0 20px 8px rgba(168,85,247,0.8); }
+        }
+
+        /* --- Loader text --- */
+        .loader-text-reveal {
+            animation: text-reveal 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s both;
+        }
+        .loader-subtext {
+            animation: text-reveal 0.6s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+        }
+        @keyframes text-reveal {
+            from { opacity: 0; letter-spacing: 0.3em; filter: blur(8px); }
+            to   { opacity: 1; letter-spacing: normal; filter: blur(0); }
+        }
+
+        /* --- Loading screen exit --- */
+        #loading-screen.exit {
+            animation: loader-exit 0.7s cubic-bezier(0.4,0,1,1) forwards;
+        }
+        @keyframes loader-exit {
+            0%   { opacity: 1; clip-path: inset(0 0 0 0); }
+            100% { opacity: 0; clip-path: inset(0 0 100% 0); }
+        }
+
+        /* ============================================
+           HERO ENTRANCE — staggered orchestration
+        ============================================ */
+
+        /* All hero children start hidden */
+        .hero-reveal {
+            opacity: 0;
+            animation: hero-up 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+        @keyframes hero-up {
+            from { opacity: 0; transform: translateY(40px); filter: blur(6px); }
+            to   { opacity: 1; transform: translateY(0);   filter: blur(0); }
+        }
+
+        .hero-reveal-logo   { animation-delay: 0.1s; }
+        .hero-reveal-h1     { animation-delay: 0.3s; }
+        .hero-reveal-p      { animation-delay: 0.5s; }
+        .hero-reveal-cta    { animation-delay: 0.65s; }
+        .hero-reveal-search { animation-delay: 0.8s; }
+
+        /* H1 word-by-word shimmer on load */
+        @keyframes word-shimmer {
+            0%   { opacity:0; transform: translateY(20px) skewY(3deg); }
+            60%  { opacity:1; transform: translateY(0) skewY(0deg); }
+            100% { opacity:1; transform: translateY(0); }
+        }
+        .shimmer-word {
+            display: inline-block;
+            opacity: 0;
+            animation: word-shimmer 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+
+        /* gradient-text animated shimmer sweep */
+        .gradient-text-animated {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 40%, #f97316 60%, #a855f7 100%);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-sweep 4s linear infinite;
+        }
+        @keyframes gradient-sweep {
+            0%   { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+
+        /* ============================================
+           BACKGROUND ORBS — richer motion
+        ============================================ */
+        .orb {
+            border-radius: 50%;
+            filter: blur(80px);
+            position: absolute;
+            will-change: transform, opacity;
+        }
+        .orb-purple {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(168,85,247,0.35) 0%, transparent 70%);
+            top: -10%; left: -15%;
+            animation: orb-drift-1 12s ease-in-out infinite;
+        }
+        .orb-pink {
+            width: 420px; height: 420px;
+            background: radial-gradient(circle, rgba(236,72,153,0.25) 0%, transparent 70%);
+            bottom: 10%; right: 5%;
+            animation: orb-drift-2 15s ease-in-out infinite;
+        }
+        .orb-orange {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+            top: 40%; left: 40%;
+            animation: orb-drift-3 18s ease-in-out infinite;
+        }
+        @keyframes orb-drift-1 {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33%     { transform: translate(60px,-40px) scale(1.1); }
+            66%     { transform: translate(-30px,60px) scale(0.9); }
+        }
+        @keyframes orb-drift-2 {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33%     { transform: translate(-70px,30px) scale(1.15); }
+            66%     { transform: translate(40px,-60px) scale(0.85); }
+        }
+        @keyframes orb-drift-3 {
+            0%,100% { transform: translate(0,0) scale(1); }
+            50%     { transform: translate(-50px,-50px) scale(1.2); }
+        }
+
+        /* Nav slide down on load */
+        nav {
+            animation: nav-drop 0.6s cubic-bezier(0.22,1,0.36,1) 1.6s both;
+        }
+        @keyframes nav-drop {
+            from { opacity:0; transform: translateY(-100%); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+
+
 </head>
 <body class="bg-black text-white overflow-x-hidden antialiased relative">
     <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center" style="touch-action: none;">
-        <div class="text-center">
+        <!-- Animated background rings -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="loader-ring loader-ring-1"></div>
+            <div class="loader-ring loader-ring-2"></div>
+            <div class="loader-ring loader-ring-3"></div>
+        </div>
+        <div class="text-center relative z-10">
             <div class="relative w-24 h-24 mx-auto mb-8">
-                <div class="absolute inset-0 border-4 border-purple-600/20 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-transparent border-t-purple-600 rounded-full animate-spin"></div>
+                <!-- Outer glow pulse -->
+                <div class="absolute inset-0 rounded-full bg-purple-600/20 animate-ping" style="animation-duration: 1.5s;"></div>
+                <!-- Static base ring -->
+                <div class="absolute inset-0 border-2 border-purple-600/10 rounded-full"></div>
+                <!-- Fast spin outer -->
+                <div class="absolute inset-0 border-4 border-transparent border-t-purple-500 border-r-purple-500/30 rounded-full loader-spin-fast"></div>
+                <!-- Slow spin inner -->
+                <div class="absolute inset-2 border-4 border-transparent border-b-pink-500 border-l-pink-500/30 rounded-full loader-spin-slow"></div>
+                <!-- Center dot -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-3 h-3 bg-purple-400 rounded-full loader-pulse-dot"></div>
+                </div>
             </div>
-            <h2 class="text-2xl font-bold gradient-text mb-2">BROWSR</h2>
-            <p class="text-gray-500">Initializing AI agents...</p>
+            <h2 class="text-2xl font-bold gradient-text mb-2 loader-text-reveal">BROWSR</h2>
+            <p class="text-gray-500 loader-subtext" id="loader-status">Initializing AI agents...</p>
         </div>
     </div>
     
@@ -396,10 +577,11 @@
         <!-- Gradient Mesh - Hidden on mobile -->
         <div class="hidden sm:block absolute inset-0 bg-gradient-mesh opacity-20 blur-3xl"></div>
         
-        <!-- Animated Gradient Orbs - Simplified for mobile -->
-        <div class="absolute top-0 -left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-purple-600 rounded-full filter blur-3xl opacity-10 sm:opacity-20 sm:animate-float"></div>
-        <div class="hidden sm:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-600 rounded-full filter blur-3xl opacity-20 animate-float" style="animation-delay: 2s;"></div>
-        <div class="hidden sm:block absolute top-1/2 left-1/2 w-96 h-96 bg-orange-600 rounded-full filter blur-3xl opacity-10 animate-float" style="animation-delay: 4s;"></div>
+        <!-- Animated Gradient Orbs -->
+        <div class="orb orb-purple hidden sm:block"></div>
+        <div class="orb orb-pink hidden sm:block"></div>
+        <div class="orb orb-orange hidden sm:block"></div>
+        <div class="sm:hidden absolute top-0 -left-1/4 w-64 h-64 bg-purple-600 rounded-full filter blur-3xl opacity-10"></div>
     </div>
     
     <!-- Navigation -->
@@ -480,23 +662,25 @@
     <section class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 py-20 z-10">
         <div class="max-w-7xl mx-auto text-center w-full">
             <!-- Floating Logo -->
-            <div class="mb-6 sm:mb-8 sm:animate-slide-down">
-                <img src="assets/logo.png" alt="BROWSR Logo" class="w-16 h-16 sm:w-20 sm:h-20 mx-auto animate-float">
+            <div class="mb-6 sm:mb-8 hero-reveal hero-reveal-logo">
+                <img src="assets/logo.png" alt="BROWSR Logo" class="w-16 h-16 sm:w-20 sm:h-20 mx-auto animate-float" style="filter: drop-shadow(0 0 20px rgba(168,85,247,0.6));">
             </div>
             
             <!-- Main Heading -->
-            <h1 class="text-[2.5rem] leading-[1.1] sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 md:mb-10 sm:animate-blur-in">
-                <span class="block">The Future of</span>
-                <span class="block gradient-text sm:text-glow leading-normal pb-1">Web Browsing</span>
+            <h1 class="text-[2.5rem] leading-[1.1] sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 md:mb-10 hero-reveal hero-reveal-h1">
+                <span class="block overflow-hidden">
+                    <span class="shimmer-word" style="animation-delay:0.35s;">The </span><span class="shimmer-word" style="animation-delay:0.48s;">Future </span><span class="shimmer-word" style="animation-delay:0.61s;">of</span>
+                </span>
+                <span class="block gradient-text-animated sm:text-glow leading-normal pb-1">Web Browsing</span>
             </h1>
             
             <!-- Subheading -->
-            <p class="text-base sm:text-xl md:text-2xl text-gray-300 sm:text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-12 px-2 sm:animate-slide-up leading-relaxed" style="animation-delay: 0.2s;">
+            <p class="text-base sm:text-xl md:text-2xl text-gray-300 sm:text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-12 px-2 leading-relaxed hero-reveal hero-reveal-p">
                 Experience autonomous browsing with AI agents that understand, execute, and deliver exactly what you need.
             </p>
             
             <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-16 sm:animate-scale max-w-md mx-auto sm:max-w-none" style="animation-delay: 0.4s;">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-16 max-w-md mx-auto sm:max-w-none hero-reveal hero-reveal-cta">
                 <a href="https://toshimart.xyz/0x61039d6486efd41c283ba3670c54a9624ec88453" target="_blank" class="group relative px-6 sm:px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 sm:hover:shadow-xl sm:hover:shadow-purple-600/50 sm:hover:-translate-y-1 w-full sm:w-auto inline-block text-center">
                     <span class="relative z-10">Buy Now</span>
                     <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
@@ -507,7 +691,7 @@
             </div>
             
             <!-- Search Preview -->
-            <div class="relative max-w-xl mx-auto sm:animate-fade-in" style="animation-delay: 0.6s;">
+            <div class="relative max-w-xl mx-auto hero-reveal hero-reveal-search">
                 <form id="hero-search-form" onsubmit="handleHeroSearch(event)" class="glass-purple rounded-xl sm:rounded-2xl p-1">
                     <div class="bg-black/50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                         <div class="flex items-center gap-2">
@@ -1133,15 +1317,37 @@
             });
         });
         
-        // Loading screen
+        // Loading screen — cinematic exit
+        const loadingMessages = [
+            'Initializing AI agents...',
+            'Loading semantic engine...',
+            'Calibrating neural pathways...',
+            'Ready.'
+        ];
+        const loaderStatus = document.getElementById('loader-status');
+        let msgIndex = 0;
+        const msgInterval = setInterval(() => {
+            msgIndex++;
+            if (msgIndex < loadingMessages.length && loaderStatus) {
+                loaderStatus.style.opacity = '0';
+                setTimeout(() => {
+                    loaderStatus.textContent = loadingMessages[msgIndex];
+                    loaderStatus.style.transition = 'opacity 0.4s';
+                    loaderStatus.style.opacity = '1';
+                }, 200);
+            } else {
+                clearInterval(msgInterval);
+            }
+        }, 400);
+
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.style.opacity = '0';
+                loadingScreen.classList.add('exit');
                 setTimeout(() => {
                     loadingScreen.style.display = 'none';
-                }, 500);
-            }, 1500);
+                }, 700);
+            }, 1800);
         });
         
         // Scroll progress
